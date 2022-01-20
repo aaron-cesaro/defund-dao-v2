@@ -12,7 +12,7 @@ from brownie import Contract
 def main():
     league_manager = deploy_league_manager()
     (exists, position) = league_manager.memberExists(
-        "0xFEB0938FCFDB9A344D7FE248EDE992CB9D085950", VENTURE_LEAGUE_ROLES[0]
+        "0xAFa5D1e5fb62851a73AC585540ddAEB35828ACDA", VENTURE_LEAGUE_ROLES[0]
     )
     if exists:
         remove_member(LEAGUES, VENTURE_LEAGUE_ROLES)
@@ -27,7 +27,7 @@ def add_member(LEAGUES, VENTURE_LEAGUE_ROLES):
         league_manager.leagueBadge(),
         deploy_league_badge().abi,
     )
-    badge_awardee = "0xfeB0938fcFdb9a344D7fe248eDe992cb9d085950"
+    badge_awardee = "0xAFa5D1e5fb62851a73AC585540ddAEB35828ACDA"
     venture_league = LEAGUES[0]
     analyst_role = VENTURE_LEAGUE_ROLES[0]
     tx_award = league_manager.addMember(
@@ -59,7 +59,7 @@ def remove_member(LEAGUES, VENTURE_LEAGUE_ROLES):
         league_manager.leagueBadge(),
         deploy_league_badge().abi,
     )
-    badge_awardee = "0xfeB0938fcFdb9a344D7fe248eDe992cb9d085950"
+    badge_awardee = "0xAFa5D1e5fb62851a73AC585540ddAEB35828ACDA"
     venture_league = LEAGUES[0]
     analyst_role = VENTURE_LEAGUE_ROLES[0]
     tx_remove = league_manager.removeMember(

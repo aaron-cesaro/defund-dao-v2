@@ -1,9 +1,7 @@
-import os
-from pathlib import Path
-import requests
 import json
 from brownie import accounts, network, config
 from metadata import league_badge_metadata_template
+import ipfshttpclient
 
 LOCAL_BLOCKCHAIN_ENVIRONMENTS = ["development"]
 
@@ -55,16 +53,11 @@ def write_metadata(token_id, league, league_badge_contract, league_manager_contr
 
 
 def upload_to_ipfs(filepath, token_id):
-    with Path(filepath).open("rb") as fp:
-        image_binary = fp.read()
-        ipfs_url = (
-            os.getenv("IPFS_URL") if os.getenv("IPFS_URL") else "http://localhost:5001"
-        )
-        response = requests.post(ipfs_url + "/api/v0/add", files={"file": image_binary})
-        ipfs_hash = response.json()["Hash"]
-        filename = filepath.split("/")[-1:][0]
-        if filepath.split(".")[-1:][0] != "json":
-            filename = str(str(token_id) + "-" + filepath.split("/")[-1:][0]).lower()
-        file_uri = "https://ipfs.io/ipfs/{}?filename={}".format(ipfs_hash, filename)
-        print(file_uri)
+    with ipfshttpclient.connect() as client:
+        hash = client.add(filepath)["Hash"]
+    filename = filepath.split("/")[-1:][0]
+    if filepath.split(".")[-1:][0] != "json":
+        filename = str(str(token_id) + "-" + filepath.split("/")[-1:][0]).lower()
+    file_uri = "https://ipfs.io/ipfs/{}?filename={}".format(hash, filename)
+    print(file_uri)
     return file_uri
